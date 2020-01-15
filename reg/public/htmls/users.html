@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#del,#add{
+			    background: #009688;
+			    margin: 25px;
+			    padding: 5px;
+			    color: white;
+			    cursor: pointer;
+				
+			}
+			table{
+			    margin-top: 50px;
+			}
+			table thead{
+			    background: #f2f2f2;
+			}
+			.zz{
+			    width: 100vw;
+			    height: 100vh;
+				background:rgba(0,0,0,0.5) ;
+			    z-index: 999;
+			    display: block;
+				position: fixed;
+				top:0;
+				display: none;
+			}
+			.zz>div{
+				width: 500px;
+				height: 500px;
+				margin: 0 auto;
+				background: white;
+			}
+			.zz label{
+			    margin: 20px 0;
+			}
+			th{
+				min-width: 100px;
+				text-align: center;
+			}
+			td{
+				min-width: 100px;
+				text-align: center;
+			}
+			.page{
+				width: 400px;
+				display: flex;
+				justify-content: space-around;
+				}
+			.page input{
+				text-align: center;
+				width: 30px;
+			}
+			.page span{
+				font-family: 30px;
+				font-size: 30px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+		    <label>用户名：<input type="text" placeholder="请输入"></label>
+		    <label>密码：<input type="text" placeholder="请输入"></label>
+		    <label>邮箱：<input type="text" placeholder="请输入"></label>
+		    性别： <input type="radio" name="sex" value="男">男
+		    	  <input type="radio" name="sex" value="女">女
+			<select id="sel">
+				<option value ="0">普通用户</option>
+				<option value ="1">会员</option>
+			</select>
+				  
+		    <button>添加用户</button>
+		</div>
+		<div style="margin-top: 20px;">
+			用户名：<input type="text">
+			手机号：<input type="text">
+			<button>搜索</button>
+		</div>
+		<div>
+		  
+		    <table border="1">
+		        <thead>
+		            <tr>
+		                <th><input type="checkbox" id="checkAll"></th>
+		                <th>ID</th>
+		                <th>用户名</th>
+		                <th>手机号</th>
+		                <th>性别</th>
+		                <th>注册时间</th>
+		                <th>冻结</th>
+						<th>权限</th>
+		                <th>操作</th>
+		            </tr>
+				
+		        </thead>
+		        <tbody>
+				<!-- 	<tr>
+						<td><input type="checkbox" class="cks"></td>
+						<td>1312skdfh1237</td>
+						<td>kkkk</td>
+						<td>188888888888</td>
+						<td>男</td>
+						<td>2020-1-1</td>
+						<td>解冻</td>
+						<td>普通用户</td>
+						<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>
+					</tr> -->
+		        </tbody>
+		    </table>
+		</div>
+		<div class="zz">
+			<div>
+				<label>用户名：<input type="text" placeholder="请输入用户名" id="username"></label><br>
+				<label>手机号码：<input type="text" placeholder="请输入手机号码" id="phone"></label><br>
+				<label>邮箱：<input type="text" placeholder="请输入邮箱" id="mail"></label><br>
+				<label>头像：<input type="text" placeholder="请选择头像" id="img"></label><br>
+				<label>选择性别：<input type="radio" name="sex" checked>男<input type="radio" name="sex">女</label><br>
+				<section>
+					<button id="sure">确定</button>
+					<button id="qx">取消</button>
+				</section>
+			</div>
+		</div>
+		<div class="page">
+			<span class="sy">  首页 </span> <span class="syy"> 上一页</span><input class="ym" type="text" value="1"> <span class="xyy"> 下一页 </span> <span class="wy"> 尾页 </span>
+		</div>
+		<script src="../jquery/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>		
+		<script type="text/javascript">
+					// 数据渲染  调取所有用户 渲染页面
+				function loadlist(){
+					$.ajax({
+						url:"http://127.0.0.1:3000/users/getuserlist",
+						type:"post",
+						data:{page:0},
+						dataType:"json",
+						success:function(res){
+							console.log(res);
+							var  str='';
+							$.each(res,function(index,ele){
+								var  freezestr=ele.freeze?"已冻结":"可用";
+								str+='<tr uid="'+ele._id+'">'
+									+'<td><input type="checkbox" class="cks"></td>'
+									+'<td>'+ele._id+'</td>'
+									+'<td>'+ele.username+'</td>'
+									+'<td>'+ele.phone+'</td>'
+									+'<td>'+ele.sex+'</td>'
+									+'<td>'+ele.createDate+'</td>'
+									+'<td>'+freezestr+'</td>'
+									+'<td>'+ele.power+'</td>'
+									+'<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>'
+								+'</tr>'
+							})	
+							$("tbody").html(str);
+							$(".ym").val("1");
+						}
+					})
+
+				}	
+					
+				loadlist();
+			
+			$(".syy").click(function(){
+				
+				
+				
+				
+				var page=Number($(".ym").val());
+				
+					
+					$.ajax({
+					url:"http://127.0.0.1:3000/users/getuserlist",
+					type:"post",
+					data:{page:page-1},
+					dataType:"json",
+					success:function(res){
+						if(page>0){
+						$(".ym").val(page-1);
+						var  str='';
+						console.log(res.length)
+						$.each(res,function(index,ele){
+							var  freezestr=ele.freeze?"已冻结":"可用";
+							str+='<tr uid="'+ele._id+'">'
+								+'<td><input type="checkbox" class="cks"></td>'
+								+'<td>'+ele._id+'</td>'
+								+'<td>'+ele.username+'</td>'
+								+'<td>'+ele.phone+'</td>'
+								+'<td>'+ele.sex+'</td>'
+								+'<td>'+ele.createDate+'</td>'
+								+'<td>'+freezestr+'</td>'
+								+'<td>'+ele.power+'</td>'
+								+'<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>'
+							+'</tr>'
+						})	
+						$("tbody").html(str);
+
+						}else{
+							
+							
+						}
+					}
+				})
+				
+				
+			})
+			
+			$(".xyy").click(function(){
+				
+				
+				
+				
+				var page=Number($(".ym").val());
+				
+					
+					$.ajax({
+					url:"http://127.0.0.1:3000/users/getuserlist",
+					type:"post",
+					data:{page:page+1},
+					dataType:"json",
+					success:function(res){
+						if(res){
+						$(".ym").val(page+1);
+						var  str='';
+						console.log(res.length)
+						$.each(res,function(index,ele){
+							var  freezestr=ele.freeze?"已冻结":"可用";
+							str+='<tr uid="'+ele._id+'">'
+								+'<td><input type="checkbox" class="cks"></td>'
+								+'<td>'+ele._id+'</td>'
+								+'<td>'+ele.username+'</td>'
+								+'<td>'+ele.phone+'</td>'
+								+'<td>'+ele.sex+'</td>'
+								+'<td>'+ele.createDate+'</td>'
+								+'<td>'+freezestr+'</td>'
+								+'<td>'+ele.power+'</td>'
+								+'<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>'
+							+'</tr>'
+						})	
+						$("tbody").html(str);
+
+						}else{
+							
+							
+						}
+					}
+				})
+				
+				
+			})
+			$(".sy").click(function(){
+				
+				sy()
+				
+			})
+			$(".wy").click(function(){
+				
+				wy()
+				
+			})
+			
+			
+			
+			
+			function sy(){
+				
+				$.post("http://127.0.0.1:3000/users/sy",{},function(res){
+					
+					var  str='';
+					$.each(res,function(index,ele){
+						var  freezestr=ele.freeze?"已冻结":"可用";
+						str+='<tr uid="'+ele._id+'">'
+							+'<td><input type="checkbox" class="cks"></td>'
+							+'<td>'+ele._id+'</td>'
+							+'<td>'+ele.username+'</td>'
+							+'<td>'+ele.phone+'</td>'
+							+'<td>'+ele.sex+'</td>'
+							+'<td>'+ele.createDate+'</td>'
+							+'<td>'+freezestr+'</td>'
+							+'<td>'+ele.power+'</td>'
+							+'<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>'
+						+'</tr>'
+					})	
+					$("tbody").html(str);
+					$(".ym").val("1");
+				})
+				
+				
+			}
+			function wy(){
+				
+				$.post("http://127.0.0.1:3000/users/wy",{},function(res){
+					var arr=res.result;
+					var  str='';
+					$.each(arr,function(index,ele){
+						var  freezestr=ele.freeze?"已冻结":"可用";
+						str+='<tr uid="'+ele._id+'">'
+							+'<td><input type="checkbox" class="cks"></td>'
+							+'<td>'+ele._id+'</td>'
+							+'<td>'+ele.username+'</td>'
+							+'<td>'+ele.phone+'</td>'
+							+'<td>'+ele.sex+'</td>'
+							+'<td>'+ele.createDate+'</td>'
+							+'<td>'+freezestr+'</td>'
+							+'<td>'+ele.power+'</td>'
+							+'<td><a href="#" class="freeze">冻结</a> <a href="#" class="edit">编辑</a> <a class="del" href="#">删除</a></td>'
+						+'</tr>'
+					})	
+					$("tbody").html(str);
+					console.log(res.num)
+					$(".ym").val(parseInt(res.num/6));
+				})
+				
+				
+			}
+			
+			
+			
+			
+		</script>
+	</body>
+</html>

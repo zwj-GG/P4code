@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<h1>购买页面</h1>
+		<h1>名称：奔驰</h1>
+		<h1>价格: <span id="price">8888</span> </h1>
+		<button id="buybtn">购买</button>
+		<script src="./jquery/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("#buybtn").click(function(){
+				$.ajax({
+					url:"http://127.0.0.1:3000/users/buy",
+					type:"post",
+					data:{
+						price:$("#price").html(),
+						token:localStorage.getItem("token")
+					},
+					success:function(res){
+						console.log(res)
+						if(res.success){
+							alert("购买成功")
+						}
+						if(res.error){
+							alert("请登录。。。")
+							location.href="http://127.0.0.1:3000/login.html";
+						}
+					}
+				})
+				
+				
+			})
+			
+			
+			
+		</script>
+	</body>
+</html>

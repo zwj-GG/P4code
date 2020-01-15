@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<h1>用户登录</h1>
+		用户名：<input type="text" id='username'>
+		<br>
+		密码：<input type="text" id="password">
+		<br>
+		手机：<input type="text" id="phone">
+		<br>
+		验证码：<input type="text" id="myveri"><canvas id="canvas" width="100" height="30"></canvas>
+		<br>
+		<button id="loginBtn">登录</button>
+		<script src="./jquery/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./code.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				
+				$("#canvas").click(function(){
+					loadVeri();
+				})
+				function loadVeri(){//加载验证码
+					// 页面加载完成  调取验证码接口
+					$.ajax({
+						url:"http://127.0.0.1:3000/users/veri",
+						data:{
+							action:"getveri"
+						},
+						type:"post",
+						dataType:"json",
+						success:function(res){
+							draw(res.veri)//绘制验证码
+						}
+					})
+				}
+				loadVeri();
+				// 登录方法
+				// 验证码正确后进行登录
+				$("#loginBtn").click(function(){
+					$.ajax({
+						url:"http://127.0.0.1:3000/users/veri",
+						type:"post",
+						data:{
+							action:"checkveri",
+							veri:$("#myveri").val()
+						},
+						success:function(res){
+							// console.log(res);
+							if(res.success){
+								// 发送登录接口请求
+							}
+							// 发送登录接口请求
+							$.ajax({
+								url:"http://127.0.0.1:3000/users/login",
+								type:"post",
+								dataType:"json",
+								data:{
+									username:$("#username").val(),
+									password:$("#password").val(),
+									phone:$("#phone").val()
+								},
+								success:function(res){
+									console.log(res);
+									if(res.success){
+										// 存储以下后端传来的token
+										localStorage.setItem("token",res.token);
+										alert("登录成功，正在为你跳转购买页面。。。。")
+										location.href="http://127.0.0.1:3000/buy.html";//跳转成功跳转购买页面
+									}
+									if(res.error){
+										alert(res.error);
+									}
+								}
+							})
+						
+	// 						if(res.error){//验证码错误提示
+	// 							alert(res.error)
+	
+	// 						}
+						}
+					})
+					
+					
+					
+					
+				})
+				
+				
+	
+			})
+			
+			
+			
+			
+			
+		</script>
+	</body>
+</html>

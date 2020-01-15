@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .nav{
+            width: 20%;
+            height: 725px;
+            float: left;
+            border: 1px solid #cccccc;
+            box-sizing: border-box;
+            overflow: hidden;
+            background: #20222a;
+            color: white;
+        }
+        .content{
+            width: 80%;
+            height: 100%;
+            float: left;
+            border: 1px solid #cccccc;
+            box-sizing: border-box;
+           
+        }
+        .nav>div{
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            border: 1px solid #ffffff;
+            box-sizing: border-box;
+        }
+        ul,li{
+            width: 100%;            
+        }
+        .nav ul{
+            margin-right: -100px;
+        }
+        li{
+            list-style: none;
+            border: 1px solid #ffffff;
+            box-sizing: border-box;
+            clear: both;
+            cursor: pointer;
+        }
+        li>span{
+            padding: 20px 0;
+            cursor: pointer;
+        }
+        li>span:first-child{
+            float: left;
+            margin-left: 30px;
+        }
+        .sr{
+            float: right;
+            margin-right: 30px;
+        }
+        li>dl{
+            clear: both;
+            text-align: center;
+            display: none;
+        }
+        li>dl>dd{
+            cursor: pointer;
+            line-height: 40px;
+            border: 1px solid #cccddd;
+        }
+		li>dl .active{
+			background: #009688;
+			color: white;
+		}
+        li>dl>dd:hover{
+            background: #009688;
+            color: white;
+        }
+        .content>div:first-child{
+            margin-bottom: 50px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="nav">
+            <div>layuiAdmin</div>
+            <ul>
+                <li>
+                    <span>主页</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>组件</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>页面</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>应用</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>高级</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li class="xx">
+                    <span>用户</span><span class="sr">↓</span>
+                    <dl>
+                        <dd turn="users.html">网站用户</dd>
+                        <dd turn="admin.html">后台管理员</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>设置</span><span class="sr">↓</span>
+                    <dl>
+                        <dd>1</dd>
+                        <dd>2</dd>
+                    </dl>
+                </li>
+                <li>
+                    <span>授权</span>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+				
+        </div>
+    </div>
+    <script src="./jquery/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+	$(function(){
+		// 默认加载user页面
+		$(".content").load("http://127.0.0.1:3000/htmls/users.html",function(){
+			
+		})
+		// 默认打开菜单
+		$(".nav li dl dd[turn*=users]").parent().slideDown();
+		// 默认dd加上高亮样式
+		$(".nav li dl dd[turn*=users]").addClass("active");
+		// 菜单切换
+		$(".nav ul li").click(function(){
+			$(this).find("dl").slideToggle(500).end().siblings().find("dl").slideUp(500);
+		})
+		
+		$(".nav ul li dd").click(function(e){
+				e.stopPropagation();//阻止冒泡
+				$(this).addClass("active").siblings().removeClass("active");
+				var turn=$(this).attr("turn");//user.html  admin.html
+				$(".content").load("http://127.0.0.1:3000/htmls/"+turn,function(){
+					//加载完成做什么
+				})
+		})
+	 })	  
+	   
+    </script>
+</body>
+</html>

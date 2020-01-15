@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<h1>注册</h1>
+			用户名: <input type="text" id="username">
+			<br>
+			密码： <input type="text" id="password">
+			<br>
+			手机号：<input type="text" id="phone">
+			<br>
+			性别： <input type="radio" name="sex" value="男">男
+				  <input type="radio" name="sex" value="女">女
+			<br>
+				<select id="sel">
+					<option value ="0">普通用户</option>
+					<option value ="1">会员</option>
+				</select>
+			<br>
+			<button id="regBtn">注册</button>
+		<script src="./jquery/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+				$("#regBtn").click(function(){
+					$.ajax({
+						url:"http://127.0.0.1:3000/users/reg",
+						type:"post",
+						dataType:"json",
+						data:{
+							username:$("#username").val(),
+							password:$("#password").val(),
+							phone:$("#phone").val(),
+							sex:$("input[name=sex]:checked").val(),
+							powerCode:$("#sel").val()
+						},
+						success:function(res){
+							 console.log(res);
+						}
+					})	
+				})
+			
+			
+			
+			
+		</script>
+	</body>
+</html>
